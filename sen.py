@@ -5,6 +5,7 @@ GPIO.setmode(GPIO.BCM)                     #Set GPIO pin numbering
 TRIG = 23                                  #Associate pin 23 to TRIG
 ECHO = 24                                  #Associate pin 24 to ECHO
 previous_distance=[]
+moving_average=0
 trash_full=False
 
 def mean(data):
@@ -66,14 +67,15 @@ while True:
     if not trash_full:
       trash_full = True
       print "Trashcan full"
-  elif not stableDist:
-      print "Trash thrown away"
+  elif len(previous_distance) == 19 and !stableDist and (distance - moving_average) / moving_average > .2:
+      print "Item thrown away"
   else:
     if trash_full:
       trash_full = False
       print "Trashcan emptied"
 
   # Keep track of the last 10 items to keep the stdev
+  moving_average = .95 * moving_average + .05 * distance
   previous_distance.append(distance)
   if len(previous_distance) > 19:
     previous_distance = previous_distance[1:]
