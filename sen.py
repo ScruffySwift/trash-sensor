@@ -66,4 +66,5 @@ while True:
   if len(previous_distance) > 10 and isStableDistance(previous_distance) and distanceInRange(distance):
     print "Trashcan full"
 
-  previous_distance.append(distance)[:10]
+  previous_distance.append(distance)
+  previous_distance = previous_distance[:10]
