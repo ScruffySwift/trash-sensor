@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO                    #Import GPIO library
 import time                                #Import time library
-GPIO.setmode(GPIO.BCM)                     #Set GPIO pin numbering 
+GPIO.setmode(GPIO.BCM)                     #Set GPIO pin numbering
 
 TRIG = 23                                  #Associate pin 23 to TRIG
 ECHO = 24                                  #Associate pin 24 to ECHO
@@ -25,7 +25,7 @@ while True:
     pulse_start = time.time()              #Saves the last known time of LOW pulse
 
   while GPIO.input(ECHO)==1:               #Check whether the ECHO is HIGH
-    pulse_end = time.time()                #Saves the last known time of HIGH pulse 
+    pulse_end = time.time()                #Saves the last known time of HIGH pulse
 
   pulse_duration = pulse_end - pulse_start #Get pulse duration to a variable
 
@@ -37,14 +37,14 @@ while True:
     garbage_full=1
     counter=0
   else:
-    counter=counter+1	
+    counter=counter+1
 
   previous_distance=distance
 
   if garbage_in_trash==1:
-    print "Trash was just put in" 
-    garbage_in_trash=0	
- 	
+    print "Trash was just put in"
+    garbage_in_trash=0
+
   if garbage_full==1 and counter==4:
     print "Take out the trash bruh!!!"
     counter=0
@@ -54,5 +54,3 @@ while True:
     print "Distance:",distance - 0.5,"cm"  #Print distance with 0.5 cm calibration
   else:
     print "Out Of Range"                   #display out of range
-
-  
