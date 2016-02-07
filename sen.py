@@ -1,3 +1,4 @@
+import os
 import RPi.GPIO as GPIO                    #Import GPIO library
 import time                                #Import time library
 GPIO.setmode(GPIO.BCM)                     #Set GPIO pin numbering
@@ -6,6 +7,7 @@ TRIG = 23                                  #Associate pin 23 to TRIG
 ECHO = 24                                  #Associate pin 24 to ECHO
 previous_distance=[]
 trash_full=False
+host= os.getenv('TRASH_HOST', 'localhost:3000')
 
 def mean(data):
     """Return the sample arithmetic mean of data."""
@@ -64,11 +66,13 @@ while True:
   if len(previous_distance) > 5 and isStableDistance(previous_distance) and distanceInRange(distance):
     if not trash_full:
       trash_full = True
-      print "Trashcan full"
+      r = request.post("http://" + host + "/api/full/trashsensor")
+      print "Trashcan full", r
   else:
     if trash_full:
       trash_full = False
-      print "Trashcan emptied"
+      r = request.post("http://" + host + "/api/empty/trashsensor")
+      print "Trashcan emptied", r
 
   # Keep track of the last 10 items to keep the stdev
   previous_distance.append(distance)
