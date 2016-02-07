@@ -33,7 +33,6 @@ def isStableDistance(data):
   """
   Returns true if distance for the data is 'stable'. That is, std is < 1
   """
-  print "pstdev", pstdev(data)
   return pstdev(data) < 1
 
 def distanceInRange(dist):
@@ -66,9 +65,10 @@ while True:
       if not trash_full:
           trash_full = True
           print "Trashcan full"
-  else:
-      trash_full = False
-      print "Trashcan emptied"
+  else
+      if trash_full:
+          trash_full = False
+          print "Trashcan emptied"
 
   # Keep track of the last 10 items to keep the stdev
   previous_distance.append(distance)
