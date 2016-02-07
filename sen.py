@@ -35,6 +35,7 @@ def isStableDistance(data):
   """
   Returns true if distance for the data is 'stable'. That is, std is < 1
   """
+  print "pstdev", pstdev(data) 
   return pstdev(data) < 1
 
 def distanceInRange(dist):
@@ -46,7 +47,7 @@ GPIO.setup(ECHO,GPIO.IN)                   #Set pin as GPIO in
 while True:
 
   GPIO.output(TRIG, False)                 #Set TRIG as LOW
-  time.sleep(2)                            #Delay of 2 seconds
+  time.sleep(.25)                          #Delay of 2 seconds
 
   GPIO.output(TRIG, True)                  #Set TRIG as HIGH
   time.sleep(0.00001)                     #Delay of 0.00001 seconds
@@ -63,8 +64,9 @@ while True:
   distance = pulse_duration * 17150        #Multiply pulse duration by 17150 to get distance
   distance = round(distance, 2)            #Round to two decimal points
 
-  if len(previous_distance) > 10 and isStableDistance(previous_distance) and distanceInRange(distance):
+  if len(previous_distance) > 5 and isStableDistance(previous_distance) and distanceInRange(distance):
     print "Trashcan full"
-
+  print "distance", distance 
   previous_distance.append(distance)
-  previous_distance = previous_distance[:10]
+  if len(previous_distance) > 9: 
+    previous_distance = previous_distance[1:]
