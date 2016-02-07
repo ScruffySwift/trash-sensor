@@ -36,7 +36,7 @@ def isStableDistance(data):
   """
   Returns true if distance for the data is 'stable'. That is, std is < 1
   """
-  return pstdev(data) < 1
+  return pstdev(data) < 4 
 
 def distanceInRange(dist):
   return dist > 4 and dist < 30
@@ -74,7 +74,7 @@ while True:
       trash_full = False
       r = requests.post(host + "/api/empty/trashsensor")
       print "Trashcan emptied", r
-
+  print distance 
   # Keep track of the last 10 items to keep the stdev
   previous_distance.append(distance)
   if len(previous_distance) > 9:
