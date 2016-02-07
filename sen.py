@@ -67,12 +67,12 @@ while True:
   if len(previous_distance) > 5 and isStableDistance(previous_distance) and distanceInRange(distance):
     if not trash_full:
       trash_full = True
-      r = requests.post(host + "/api/full/trashsensor")
+      r = requests.post(host + "/api/full/hackpolytrash")
       print "Trashcan full", r
   else:
     if trash_full:
       trash_full = False
-      r = requests.post(host + "/api/empty/trashsensor")
+      r = requests.post(host + "/api/empty/hackpolytrash")
       print "Trashcan emptied", r
   print distance 
   # Keep track of the last 10 items to keep the stdev
