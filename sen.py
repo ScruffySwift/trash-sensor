@@ -5,9 +5,7 @@ GPIO.setmode(GPIO.BCM)                     #Set GPIO pin numbering
 TRIG = 23                                  #Associate pin 23 to TRIG
 ECHO = 24                                  #Associate pin 24 to ECHO
 previous_distance=[]
-garbage_in_trash=0
-garbage_full=0
-counter=0
+trash_full=False
 
 def mean(data):
     """Return the sample arithmetic mean of data."""
@@ -35,7 +33,7 @@ def isStableDistance(data):
   """
   Returns true if distance for the data is 'stable'. That is, std is < 1
   """
-  print "pstdev", pstdev(data) 
+  print "pstdev", pstdev(data)
   return pstdev(data) < 1
 
 def distanceInRange(dist):
@@ -65,8 +63,14 @@ while True:
   distance = round(distance, 2)            #Round to two decimal points
 
   if len(previous_distance) > 5 and isStableDistance(previous_distance) and distanceInRange(distance):
-    print "Trashcan full"
-  print "distance", distance 
+      if not trash_full:
+          trash_full = True
+          print "Trashcan full"
+  else:
+      trash_full = False
+      print "Trashcan emptied"
+
+  # Keep track of the last 10 items to keep the stdev
   previous_distance.append(distance)
-  if len(previous_distance) > 9: 
+  if len(previous_distance) > 9:
     previous_distance = previous_distance[1:]
