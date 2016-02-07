@@ -61,10 +61,13 @@ while True:
   distance = pulse_duration * 17150        #Multiply pulse duration by 17150 to get distance
   distance = round(distance, 2)            #Round to two decimal points
 
-  if len(previous_distance) > 5 and isStableDistance(previous_distance) and distanceInRange(distance):
+  stableDist = isStableDistance(previous_distance)
+  if len(previous_distance) == 19 and stableDist and distanceInRange(distance):
     if not trash_full:
       trash_full = True
       print "Trashcan full"
+  elif not stableDist:
+      print "Trash thrown away"
   else:
     if trash_full:
       trash_full = False
@@ -72,5 +75,5 @@ while True:
 
   # Keep track of the last 10 items to keep the stdev
   previous_distance.append(distance)
-  if len(previous_distance) > 9:
+  if len(previous_distance) > 19:
     previous_distance = previous_distance[1:]
