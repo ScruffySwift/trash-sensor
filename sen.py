@@ -4,10 +4,41 @@ GPIO.setmode(GPIO.BCM)                     #Set GPIO pin numbering
 
 TRIG = 23                                  #Associate pin 23 to TRIG
 ECHO = 24                                  #Associate pin 24 to ECHO
-previous_distance=0
+previous_distance=[]
 garbage_in_trash=0
 garbage_full=0
 counter=0
+
+def mean(data):
+    """Return the sample arithmetic mean of data."""
+    n = len(data)
+    if n < 1:
+        raise ValueError('mean requires at least one data point')
+    return sum(data)/n # in Python 2 use sum(data)/float(n)
+
+def _ss(data):
+    """Return sum of square deviations of sequence data."""
+    c = mean(data)
+    ss = sum((x-c)**2 for x in data)
+    return ss
+
+def pstdev(data):
+    """Calculates the population standard deviation."""
+    n = len(data)
+    if n < 2:
+        raise ValueError('variance requires at least two data points')
+    ss = _ss(data)
+    pvar = ss/n # the population variance
+    return pvar**0.5
+
+def isStableDistance(data):
+  """
+  Returns true if distance for the data is 'stable'. That is, std is < 1
+  """
+  return pstdev(data) < 1
+
+def distanceInRange(dist):
+  return dist > 4 and dist < 400
 
 GPIO.setup(TRIG,GPIO.OUT)                  #Set pin as GPIO out
 GPIO.setup(ECHO,GPIO.IN)                   #Set pin as GPIO in
@@ -32,25 +63,7 @@ while True:
   distance = pulse_duration * 17150        #Multiply pulse duration by 17150 to get distance
   distance = round(distance, 2)            #Round to two decimal points
 
-  if (previous_distance + 4) <= distance or (previous_distance - 4) >= distance:
-    garbage_in_trash=1
-    garbage_full=1
-    counter=0
-  else:
-    counter=counter+1
+  if len(previous_distance) > 10 and isStableDistance(previous_distance) and distanceInRange(distance):
+    print "Trashcan full"
 
-  previous_distance=distance
-
-  if garbage_in_trash==1:
-    print "Trash was just put in"
-    garbage_in_trash=0
-
-  if garbage_full==1 and counter==4:
-    print "Take out the trash bruh!!!"
-    counter=0
-    garbage_full=0
-
-  if distance > 2 and distance < 400:      #Check whether the distance is within range
-    print "Distance:",distance - 0.5,"cm"  #Print distance with 0.5 cm calibration
-  else:
-    print "Out Of Range"                   #display out of range
+  previous_distance.append(distance)[:10]
