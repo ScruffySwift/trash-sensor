@@ -39,7 +39,7 @@ def isStableDistance(data):
   return pstdev(data) < 4 
 
 def distanceInRange(dist):
-  return dist > 4 and dist < 30
+  return dist < 30
 
 GPIO.setup(TRIG,GPIO.OUT)                  #Set pin as GPIO out
 GPIO.setup(ECHO,GPIO.IN)                   #Set pin as GPIO in
